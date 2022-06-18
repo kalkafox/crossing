@@ -15,6 +15,7 @@ const Button = ({ states, text, game }) => {
   };
 
   useEffect(() => {
+    console.log(game);
     states.game.value === game
       ? buttonApi.start({ scale: 1.3, rotateZ: 0 })
       : buttonApi.start({ scale: 1, rotateZ: 0 });
@@ -25,7 +26,7 @@ const Button = ({ states, text, game }) => {
   };
 
   const buttonMouseLeave = () => {
-    buttonApi.start({ scale: 1, rotateZ: 0 });
+    states.game.value != game && buttonApi.start({ scale: 1, rotateZ: 0 });
   };
   return (
     <a.button
@@ -35,7 +36,7 @@ const Button = ({ states, text, game }) => {
         buttonMouseLeave(game);
       }}
       disabled={states.transition.value || game === states.game.value}
-      className="text-[#7D6839] dark:text-[#c4b497] dark:bg-[#181350] p-3 rounded-3xl bg-[#feed9f]"
+      className="text-[#7D6839] dark:text-[rgb(216,216,237)] dark:bg-[rgb(42,36,55)] p-3 rounded-3xl bg-[#feed9f]"
       type="button"
       onClick={() => buttonClick(game)}>
       {text}

@@ -35,10 +35,6 @@ const AudioLogic = ({ states }) => {
   //   }
   // };
 
-  setInterval(() => {
-    states.date.set(new Date());
-  }, 100);
-
   useEffect(() => {
     setAudioHour(states.date.value.getHours());
   }, [states.date.value]);
@@ -54,15 +50,21 @@ const AudioLogic = ({ states }) => {
   }, [states.volume.value]);
   useEffect(() => {
     states.audio.value ? audioPlay() : audioPause();
-    console.log("lel");
   }, [states.audio.value]);
+
   useEffect(() => {
-    const currentTime = audio.current.currentTime;
-    audio.current.pause();
-    audio.current.load();
-    audio.current.currentTime = currentTime;
-    audio.current.play();
-    states.audio.set(true);
+    if (states.audio.value) {
+      const currentTime = audio.current.currentTime;
+      try {
+        audio.current.pause();
+        audio.current.load();
+        audio.current.currentTime = currentTime;
+        audio.current.play();
+        states.audio.set(true);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }, [states.game.value]);
 
   const doRestart = (e) => {
@@ -72,7 +74,7 @@ const AudioLogic = ({ states }) => {
 
   return (
     <>
-      <audio ref={audio} autoPlay preload onEnded={doRestart}>
+      <audio ref={audio} preload="true" onEnded={doRestart}>
         <source
           src={`/audio/animal_crossing/${states.game.value}/${audioHour}.ogg`}
           type="audio/ogg"></source>
