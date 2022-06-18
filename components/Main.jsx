@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Head from "next/head";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { animated as a, useSpring, useTransition } from "react-spring";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
@@ -10,6 +11,7 @@ import AudioButton from "./AudioButton";
 import States, { randomTweet } from "./States";
 import Video from "./Video";
 import Tweet from "./Tweet";
+import { NextSeo } from "next-seo";
 
 const Main = () => {
   const states = States();
@@ -153,6 +155,19 @@ const Main = () => {
 
   return (
     <>
+      <NextSeo
+        title="Unofficial Crossing Times"
+        description="Listen to relax Animal Crossing music while you work! Bonus: ACNH Tweets!"
+      />
+      <Head>
+        <meta
+          property="og:audio"
+          content={`/audio/animal_crossing/${
+            states.game.value
+          }/${new Date().getHours()}.ogg`}
+        />
+        <meta property="og:image" content="/img/ac.png" />
+      </Head>
       <div className="flex justify-center">
         <AudioLogic states={states} />
         <div className="dark:bg-slate-800/80 bg-white/50 w-full h-full fixed"></div>
@@ -228,7 +243,7 @@ const Main = () => {
           style={tweetSpring}
           onMouseEnter={tweetMouseEnter}
           onMouseLeave={tweetMouseLeave}
-          className="absolute m-auto bottom-20 left-20 w-[800px] h-72">
+          className="absolute bottom-20 m-auto left-20 w-[800px] h-72">
           {tweetTransition((style, i) => (
             <a.div style={style} className="absolute">
               <Tweet tweet_data={i} />
