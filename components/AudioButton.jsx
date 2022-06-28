@@ -14,7 +14,7 @@ const AudioButton = ({ states }) => {
       : transitionElements.play.icon,
     {
       config: {
-        friction: 15,
+        friction: 10,
       },
       key: states.audio.value
         ? transitionElements.pause.icon
@@ -22,10 +22,9 @@ const AudioButton = ({ states }) => {
       from: {
         opacity: 0,
         scale: 0.5,
-        x: -30,
       },
-      enter: { opacity: 1, scale: 1, x: 0 },
-      leave: { opacity: 0, scale: 0.5, x: 30 },
+      enter: { opacity: 1, scale: 1 },
+      leave: { opacity: 0, scale: 0.5 },
     }
   );
 

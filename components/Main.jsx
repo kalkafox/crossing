@@ -15,16 +15,22 @@ import { NextSeo } from "next-seo";
 
 const Main = () => {
   const states = States();
+
+  const getTweet = async (currentTweet = "", currentVideo = "") => {
+    let tweet = await fetch("http://localhost:3001/api/tweet").then((res) =>
+      res.json()
+    );
+    while (tweet.id === currentTweet || tweet.media === currentVideo) {
+      tweet = await fetch("http://localhost:3001/api/tweet").then((res) =>
+        res.json()
+      );
+      break;
+    }
+    states.tweet.set(tweet[0]);
+    states.video.set(tweet[0].media);
+  };
+
   const videoRef = useRef();
-
-  useEffect(() => {
-    const tweet = randomTweet();
-    states.tweet.set(tweet);
-  }, []);
-
-  const [videoPreview, setVideoPreview] = useState(
-    states.tweet.value.media.preview_image_url
-  );
 
   const transitionStopped = () => {
     states.transition.set(false);
@@ -53,8 +59,7 @@ const Main = () => {
   const wheelScale = 1;
 
   const clampScale = (scale) => {
-    scale = scale > 1.2 ? 1.2 : scale;
-    scale = scale < 0.9 ? 0.9 : scale;
+    scale = Math.min(Math.max(scale, 0.5), 1.5);
     return scale;
   };
 
@@ -79,15 +84,6 @@ const Main = () => {
   const mouseLeave = (e) => {
     zoomSpringApi.start({ to: { scale: wheelScale } });
   };
-
-  useEffect(() => {
-    const url = states.tweet.value.media.url;
-    setVideoPreview(url);
-    states.video.set({
-      url: url,
-      preview_url: states.tweet.value.media.preview_image_url,
-    });
-  }, [states.tweet.value]);
 
   const tweetTransition = useTransition(states.tweet.value, {
     key: states.tweet.value,
@@ -124,6 +120,7 @@ const Main = () => {
     },
     from: {
       rotateZ: 0,
+      y: 0,
     },
   }));
 
@@ -134,6 +131,7 @@ const Main = () => {
     from: {
       rotateZ: 0,
       scale: 1,
+      y: 0,
     },
   }));
 
@@ -152,6 +150,33 @@ const Main = () => {
   const tweetMouseLeave = () => {
     tweetSpringApi.start({ rotateZ: 0, scale: 1 });
   };
+
+  useEffect(() => {
+    if (!states.focus.value) {
+      videoSpringApi.start({ y: -500, scale: 1 });
+      tweetSpringApi.start({ y: 500, scale: 1 });
+    } else {
+      videoSpringApi.start({ y: 0, scale: 1 });
+      tweetSpringApi.start({ y: 0, scale: 1 });
+      if (states.videoEnded.value) {
+        getTweet();
+        states.videoEnded.set(false);
+      }
+    }
+  }, [states.focus.value]);
+
+  useEffect(() => {
+    states.videoEnded.set(true);
+    const mouseOver = (e) => {
+      states.focus.set(true);
+    };
+
+    const mouseOut = (e) => {
+      states.focus.set(false);
+    };
+    window.addEventListener("mouseover", mouseOver);
+    window.addEventListener("mouseout", mouseOut);
+  }, []);
 
   return (
     <>
@@ -232,10 +257,8 @@ const Main = () => {
           onMouseEnter={videoMouseEnter}
           onMouseLeave={videoMouseLeave}>
           {videoTransition((style, i) => (
-            <a.div
-              style={{ ...style, backgroundImage: i.preview_url }}
-              className={`absolute`}>
-              <Video url={i.url} states={states} />
+            <a.div style={style} className={`absolute`}>
+              <Video url={i} states={states} getTweet={getTweet} />
             </a.div>
           ))}
         </a.div>
@@ -243,7 +266,7 @@ const Main = () => {
           style={tweetSpring}
           onMouseEnter={tweetMouseEnter}
           onMouseLeave={tweetMouseLeave}
-          className="absolute bottom-20 m-auto left-20 w-[800px] h-72">
+          className="fixed bottom-20 m-auto left-20 w-[800px] h-72">
           {tweetTransition((style, i) => (
             <a.div style={style} className="absolute">
               <Tweet tweet_data={i} />

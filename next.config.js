@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
-const optimizedImages = require("next-optimized-images");
 const nextConfig = {
   reactStrictMode: true,
-  optimizedImages,
+  images: {
+    domains: ["pbs.twimg.com", "abs.twimg.com", "media.twitter.com"],
+  },
 };
 
 module.exports = nextConfig;

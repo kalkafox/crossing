@@ -5,6 +5,9 @@ from requests.auth import HTTPBasicAuth
 class TweetSearch:
   def __init__(self):
     self.session = requests.Session()
+    self.key = "dUJ2dkpGSTFrZFk2SzJHZUw1TE46MTpjaQ"
+    self.secret = "lP-yg-EvE241xn4fXCRCQlkOUrASGJhJFdDW5FbBz_jY_D4Es_"
+    self.token = "AAAAAAAAAAAAAAAAAAAAAOyHdwEAAAAAC5lvDzX8%2FwVMaYwQxQ4xBnY7ScI%3D8xrC6ag6wzsm2Nvh1WXGqbTIAnvOgTUW4lCvZwU16RgtiyfWrT"
   
   def test(self):
     print(self.token)
@@ -18,8 +21,8 @@ class TweetSearch:
       until_id = tweet_data['meta']['oldest_id']
     except KeyError:
       until_id = 0
-    for i in range(1):
-      r = self.session.get(f"https://api.twitter.com/2/tweets/search/recent?query=#AnimalCrossing%20has%3Ahashtags%20has%3Avideos&max_results=10&expansions=attachments.media_keys,author_id&tweet.fields=attachments,author_id,id,text&media.fields=preview_image_url,variants&user.fields=profile_image_url,username{next_token and f'&next_token={next_token}' or ''}{until_id and f'&until_id={until_id}' or ''}")
+    for i in range(12):
+      r = self.session.get(f"https://api.twitter.com/2/tweets/search/recent?query=%23AnimalCrossing%20%23NintendoSwitch%20has%3Ahashtags%20has%3Avideos&max_results=10&expansions=attachments.media_keys,author_id&tweet.fields=attachments,author_id,id,text&media.fields=preview_image_url,variants&user.fields=profile_image_url,username{next_token and f'&next_token={next_token}' or ''}{until_id and f'&until_id={until_id}' or ''}")
       api_tweet_data = r.json()
       print(api_tweet_data)
       media_index = -1

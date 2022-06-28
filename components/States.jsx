@@ -1,14 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { gamecolors } from "./Const";
-import tweets from "./tweets.json";
-
-export const randomTweet = (currentTweet = "", currentVideo = "") => {
-  let tweet = tweets["data"][Math.floor(Math.random() * tweets["data"].length)];
-  while (currentTweet === tweet.data.id || currentVideo === tweet.media.url) {
-    tweet = tweets["data"][Math.floor(Math.random() * tweets["data"].length)];
-  }
-  return tweet;
-};
 
 export const States = () => {
   const [game, setGame] = useState("gc");
@@ -18,11 +9,20 @@ export const States = () => {
   const [gamecolor, setGameColor] = useState(gamecolors[game]);
   const [volume, setVolume] = useState(20);
   const [backgroundOpacity, backgroundOpacitySet] = useState(0.0);
-  const [tweetState, setTweetState] = useState(tweets["data"][0]);
-  const [videoUrl, setVideoUrl] = useState({
-    url: tweetState.media.url,
-    preview_url: tweetState.media.preview_image_url,
+  const [tweetState, setTweetState] = useState({
+    author_image: "/favicon.ico",
+    author_name: "",
+    tweet: "",
+    media: "",
   });
+  const [changeGame, setChangeGame] = useState(false);
+  const [videoUrl, setVideoUrl] = useState({
+    url: "",
+  });
+  const [gameButtonReady, setGameButtonReady] = useState(true);
+  const [focus, setFocus] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
+
   const states = {
     game: { value: game, set: setGame },
     transition: { value: transitionActive, set: transitionActiveSet },
@@ -33,6 +33,10 @@ export const States = () => {
     date: { value: date, set: setDate },
     tweet: { value: tweetState, set: setTweetState },
     video: { value: videoUrl, set: setVideoUrl },
+    gameButtonReady: { value: gameButtonReady, set: setGameButtonReady },
+    changeGame: { value: changeGame, set: setChangeGame },
+    focus: { value: focus, set: setFocus },
+    videoEnded: { value: videoEnded, set: setVideoEnded },
   };
   return states;
 };

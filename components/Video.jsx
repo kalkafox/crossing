@@ -1,8 +1,13 @@
 import { randomTweet } from "./States";
 
-const Video = ({ url, states }) => {
+const Video = ({ url, states, getTweet }) => {
+  console.log(url);
   const videoEnded = () => {
-    states.tweet.set(randomTweet(states.tweet.value, states.video.value));
+    if (states.focus.value) {
+      getTweet();
+    } else {
+      states.videoEnded.set(true);
+    }
   };
   return (
     <video

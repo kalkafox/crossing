@@ -53,18 +53,51 @@ const AudioLogic = ({ states }) => {
   }, [states.audio.value]);
 
   useEffect(() => {
-    if (states.audio.value) {
-      const currentTime = audio.current.currentTime;
+    states.gameButtonReady.set(false);
+    const currentVolume = states.volume.value / 100;
+
+    const fadeOutInterval = setInterval(() => {
+      if (states.volume.value === 0) {
+        audio.current.play();
+        clearInterval(fadeOutInterval);
+        return;
+      }
       try {
+        audio.current.volume -= 0.01;
+      } catch (e) {
+        audio.current.volume = 0;
+      }
+      if (audio.current.volume === 0) {
+        clearInterval(fadeOutInterval);
+        const currentTime = audio.current.currentTime;
         audio.current.pause();
         audio.current.load();
         audio.current.currentTime = currentTime;
-        audio.current.play();
-        states.audio.set(true);
-      } catch (error) {
-        console.log(error);
+        if (states.audio.value) {
+          states.audio.set(true);
+          audio.current.play();
+        }
+        const fadeInInterval = setInterval(() => {
+          try {
+            audio.current.volume += 0.01;
+          } catch (e) {
+            audio.current.volume = currentVolume;
+          }
+          if (audio.current.volume >= currentVolume) {
+            audio.current.volume = currentVolume;
+            console.log("this happened");
+            states.gameButtonReady.set(true);
+            clearInterval(fadeInInterval);
+          }
+        }, 50);
+        if (audio.current.volume >= currentVolume) {
+          clearInterval(fadeInInterval);
+        }
       }
-    }
+    }, 50);
+    return () => {
+      clearInterval(fadeOutInterval);
+    };
   }, [states.game.value]);
 
   const doRestart = (e) => {
