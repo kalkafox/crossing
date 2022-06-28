@@ -17,13 +17,9 @@ const Main = () => {
   const states = States();
 
   const getTweet = async (currentTweet = "", currentVideo = "") => {
-    let tweet = await fetch("http://localhost:3001/api/tweet").then((res) =>
-      res.json()
-    );
+    let tweet = await fetch("api/tweet").then((res) => res.json());
     while (tweet.id === currentTweet || tweet.media === currentVideo) {
-      tweet = await fetch("http://localhost:3001/api/tweet").then((res) =>
-        res.json()
-      );
+      tweet = await fetch("api/tweet").then((res) => res.json());
       break;
     }
     states.tweet.set(tweet[0]);
@@ -166,7 +162,7 @@ const Main = () => {
   }, [states.focus.value]);
 
   useEffect(() => {
-    states.videoEnded.set(true);
+    getTweet();
     const mouseOver = (e) => {
       states.focus.set(true);
     };
@@ -176,6 +172,10 @@ const Main = () => {
     };
     window.addEventListener("mouseover", mouseOver);
     window.addEventListener("mouseout", mouseOut);
+    return () => {
+      window.removeEventListener("mouseOver", mouseOver);
+      window.removeEventListener("mouseout", mouseOut);
+    };
   }, []);
 
   return (
@@ -196,10 +196,16 @@ const Main = () => {
       <div className="flex justify-center">
         <AudioLogic states={states} />
         <div className="dark:bg-slate-800/80 bg-white/50 w-full h-full fixed"></div>
-        <div className="fixed w-full h-full bg-[url('/img/ac.jpg')] bg-cover z-[-5]"></div>
-        <a.div
-          style={zoomSpring}
-          className="fixed z-10 m-auto bg-[rgb(255,251,236)] dark:bg-[rgb(42,36,55)]/50 w-[250px] h-[250px] top-5 right-20 rounded-[300px] flex justify-center">
+        <div className="fixed min-w-screen h-screen w-screen object-cover grid z-[-5]">
+          <Image
+            src="/img/ac.jpg"
+            layout="responsive"
+            width="100%"
+            height="100%"
+            alt="bg"
+          />
+        </div>
+        <a.div className="fixed z-10 m-auto bg-[rgb(255,251,236)] dark:bg-[rgb(42,36,55)]/50 w-[250px] h-[250px] top-5 right-20 rounded-[300px] flex justify-center">
           <div className="w-[284px] h-[284px]">
             <CircularProgressbar
               background={false}
@@ -234,8 +240,8 @@ const Main = () => {
           style={zoomSpring}
           onMouseEnter={mouseEnter}
           onMouseLeave={mouseLeave}
-          className="w-[600px] h-[200px] m-auto left-20 absolute text-center bg-[rgb(255,251,236)] dark:bg-[rgb(42,36,55)]/50 rounded-[500px] top-14">
-          <div className="border-none p-8 text-lg font-['Rodin_Pro'] space-x-8">
+          className="w-[700px] h-[200px] m-auto left-20 absolute text-center bg-[rgb(255,251,236)] dark:bg-[rgb(42,36,55)]/50 rounded-[500px] top-14">
+          <div className="border-none p-8 text-lg font-['Rodin_Pro'] space-x-12">
             <Button states={states} text="City Folk" game="cf" />
             <Button states={states} text="Wild World" game="ww" />
             <Button states={states} text="GameCube" game="gc" />
@@ -257,8 +263,18 @@ const Main = () => {
           onMouseEnter={videoMouseEnter}
           onMouseLeave={videoMouseLeave}>
           {videoTransition((style, i) => (
-            <a.div style={style} className={`absolute`}>
-              <Video url={i} states={states} getTweet={getTweet} />
+            <a.div
+              style={{
+                ...style,
+              }}
+              className={`absolute w-full h-full`}>
+              <Video url={i.url} states={states} getTweet={getTweet} />
+              <Image
+                src={i.preview_image_url}
+                className="rounded-3xl -z-50"
+                layout="fill"
+                alt="lel"
+              />
             </a.div>
           ))}
         </a.div>
@@ -266,7 +282,7 @@ const Main = () => {
           style={tweetSpring}
           onMouseEnter={tweetMouseEnter}
           onMouseLeave={tweetMouseLeave}
-          className="fixed bottom-20 m-auto left-20 w-[800px] h-72">
+          className="fixed bottom-20 m-auto left-20 w-[800px] portrait:w-8 h-72">
           {tweetTransition((style, i) => (
             <a.div style={style} className="absolute">
               <Tweet tweet_data={i} />

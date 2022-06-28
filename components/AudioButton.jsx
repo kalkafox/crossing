@@ -37,7 +37,7 @@ const AudioButton = ({ states }) => {
       <div>
         <button
           onClick={setAudio}
-          className="font-['Rodin_Pro'] dark:text-[rgb(216,216,237)] w-24 h-8 left-0 right-0 m-auto p-2 rounded-3xl absolute bottom-4">
+          className="font-['Rodin_Pro_DB'] dark:text-[rgb(216,216,237)] w-24 h-8 left-0 right-0 m-auto p-2 rounded-3xl absolute bottom-4">
           {transition((style, i) => (
             <a.div style={style} className="absolute right-5 top-1 text-center">
               <FontAwesomeIcon icon={i} />

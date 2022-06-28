@@ -5,9 +5,8 @@ const Video = ({ url, states, getTweet }) => {
   const videoEnded = () => {
     if (states.focus.value) {
       getTweet();
-    } else {
-      states.videoEnded.set(true);
     }
+    states.videoEnded.set(true);
   };
   return (
     <video

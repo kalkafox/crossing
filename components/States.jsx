@@ -18,6 +18,7 @@ export const States = () => {
   const [changeGame, setChangeGame] = useState(false);
   const [videoUrl, setVideoUrl] = useState({
     url: "",
+    preview_image_url: "/favicon.ico",
   });
   const [gameButtonReady, setGameButtonReady] = useState(true);
   const [focus, setFocus] = useState(false);
