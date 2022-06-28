@@ -20,7 +20,7 @@ const pollTweets = async () => {
     console.log(`waiting... ${timestamp - time} seconds left`);
     return;
   }
-  timestamp = time + 3;
+  timestamp = time + 1500;
 
   const client = await getClient();
   const db = client.db("crossing");

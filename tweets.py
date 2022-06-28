@@ -5,10 +5,8 @@ from requests.auth import HTTPBasicAuth
 class TweetSearch:
   def __init__(self):
     self.session = requests.Session()
-    self.key = "dUJ2dkpGSTFrZFk2SzJHZUw1TE46MTpjaQ"
-    self.secret = "lP-yg-EvE241xn4fXCRCQlkOUrASGJhJFdDW5FbBz_jY_D4Es_"
-    self.token = "AAAAAAAAAAAAAAAAAAAAAOyHdwEAAAAAC5lvDzX8%2FwVMaYwQxQ4xBnY7ScI%3D8xrC6ag6wzsm2Nvh1WXGqbTIAnvOgTUW4lCvZwU16RgtiyfWrT"
-  
+    
+      
   def test(self):
     print(self.token)
     with open("tweets.json") as f:
