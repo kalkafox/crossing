@@ -29,7 +29,7 @@ const Tweet = ({ tweet_data }) => {
             @{tweet_data.author_username}
           </a>
         </div>
-        <div className="text-2xl portrait:text-sm text-[#6d5949]">
+        <div className="text-2xl portrait:text-sm text-[#6d5949] dark:text-[rgb(216,216,237)]">
           {tweet_data.text
             .replace(/#\S+/g, "")
             .replace(/(?:https?|ftp):\/\/[\n\S]+/g, "")}
