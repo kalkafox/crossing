@@ -22,6 +22,9 @@ const Main = () => {
       tweet = await fetch("api/tweet").then((res) => res.json());
       break;
     }
+    tweet[0].text
+      .replace(/#\S+/g, "")
+      .replace(/(?:https?|ftp):\/\/[\n\S]+/g, "");
     states.tweet.set(tweet[0]);
     states.video.set(tweet[0].media);
   };
