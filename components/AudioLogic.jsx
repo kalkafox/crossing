@@ -85,7 +85,6 @@ const AudioLogic = ({ states }) => {
           }
           if (audio.current.volume >= currentVolume) {
             audio.current.volume = currentVolume;
-            console.log("this happened");
             states.gameButtonReady.set(true);
             clearInterval(fadeInInterval);
           }

@@ -30,7 +30,9 @@ const Tweet = ({ tweet_data }) => {
           </a>
         </div>
         <div className="text-2xl portrait:text-sm text-[#6d5949]">
-          {tweet_data.text}
+          {tweet_data.text
+            .replace(/#\S+/g, "")
+            .replace(/(?:https?|ftp):\/\/[\n\S]+/g, "")}
         </div>
       </div>
       <div className="bg-[rgb(214,212,188)] text-[rgb(16,16,37)] dark:text-[rgb(216,216,237)] dark:bg-[rgb(95,88,114)] px-8 py-1 top-2 left-12 absolute text-3xl font-['Rodin_Pro_M'] rounded-3xl">
